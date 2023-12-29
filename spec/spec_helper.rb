@@ -1,6 +1,7 @@
 require 'zabbixapi'
 
 MIN_ROLE_VERSION = Gem::Version.new('5.2')
+APPLICATION_REMOVED_VERSION = Gem::Version.new('5.4')
 
 def zbx
   # settings

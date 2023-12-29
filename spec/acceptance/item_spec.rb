@@ -9,11 +9,13 @@ describe 'item' do
       host: @template,
       groups: [groupid: @hostgroupid]
     )
-    @application = gen_name 'application'
-    @applicationid = zbx.applications.create(
-      name: @application,
-      hostid: @templateid
-    )
+    if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+      @application = gen_name 'application'
+      @applicationid = zbx.applications.create(
+        name: @application,
+        hostid: @templateid
+      )
+    end
   end
 
   context 'when name not exists' do
@@ -23,13 +25,16 @@ describe 'item' do
 
     describe 'create' do
       it 'should return integer id' do
-        itemid = zbx.items.create(
+        params = {
           name: @item,
           key_: "proc.num[#{gen_name 'proc'}]",
           status: 0,
           hostid: @templateid,
-          applications: [@applicationid]
-        )
+        }
+        if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+          params[:applications] = [@applicationid]
+        end
+        itemid = zbx.items.create(**params)
         expect(itemid).to be_kind_of(Integer)
       end
     end
@@ -44,25 +49,31 @@ describe 'item' do
   context 'when name exists' do
     before :all do
       @item = gen_name 'item'
-      @itemid = zbx.items.create(
+      @params = {
         name: @item,
         key_: 'proc.num[aaa]',
         status: 0,
         hostid: @templateid,
-        applications: [@applicationid]
-      )
+      }
+      if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+        @params[:applications] = [@applicationid]
+      end
+      @itemid = zbx.items.create(**@params)
     end
 
     describe 'get_or_create' do
       it 'should return id of item' do
+        params = {
+          name: @item,
+          key_: "proc.num[#{gen_name 'proc'}]",
+          status: 0,
+          hostid: @templateid,
+        }
+        if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+          params[:applications] = [@applicationid]
+        end
         expect(
-          zbx.items.get_or_create(
-            name: @item,
-            key_: "proc.num[#{gen_name 'proc'}]",
-            status: 0,
-            hostid: @templateid,
-            applications: [@applicationid]
-          )
+          zbx.items.get_or_create(**params)
         ).to eq @itemid
       end
     end
@@ -96,25 +107,31 @@ describe 'item' do
 
     describe 'create_or_update' do
       it 'should update existing item' do
+        params = {
+          name: @item,
+          key_: "proc.num[#{gen_name 'proc'}]",
+          status: 0,
+          hostid: @templateid,
+        }
+        if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+          params[:applications] = [@applicationid]
+        end
         expect(
-          zbx.items.create_or_update(
-            name: @item,
-            key_: "proc.num[#{gen_name 'proc'}]",
-            status: 0,
-            hostid: @templateid,
-            applications: [@applicationid]
-          )
+          zbx.items.create_or_update(**params)
         ).to eq @itemid
       end
 
       it 'should create item' do
-        new_item_id = zbx.items.create_or_update(
+        params = {
           name: @item + '____1',
           key_: "proc.num[#{gen_name 'proc'}]",
           status: 0,
           hostid: @templateid,
-          applications: [@applicationid]
-        )
+        }
+        if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+          params[:applications] = [@applicationid]
+        end
+        new_item_id = zbx.items.create_or_update(**params)
 
         expect(new_item_id).to be_kind_of(Integer)
         expect(new_item_id).to be > @itemid

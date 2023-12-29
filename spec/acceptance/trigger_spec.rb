@@ -9,20 +9,23 @@ describe 'trigger' do
       host: @template,
       groups: [groupid: @hostgroupid]
     )
-    @application = gen_name 'application'
-    @applicationid = zbx.applications.create(
-      name: @application,
-      hostid: @templateid
-    )
     @item = gen_name 'item'
     @proc = "proc.num[#{gen_name 'proc'}]"
-    @itemid = zbx.items.create(
+    @params = {
       name: @item,
       key_: @proc,
       status: 0,
       hostid: @templateid,
-      applications: [@applicationid]
-    )
+    }
+    if Gem::Version.new(zbx.client.api_version) < APPLICATION_REMOVED_VERSION
+      @application = gen_name 'application'
+      @applicationid = zbx.applications.create(
+        name: @application,
+        hostid: @templateid
+      )
+      @params[:applications] = [@applicationid]
+    end
+    @itemid = zbx.items.create(**@params)
   end
 
   context 'when name not exists' do
