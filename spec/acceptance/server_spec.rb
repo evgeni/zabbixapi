@@ -6,8 +6,8 @@ describe 'server' do
       expect(zbx.server.version).to be_kind_of(String)
     end
 
-    it 'should be 2.4.x, 3.2.x, 3.4.x, 4.0.x, 5.0.x, or 5.2.x' do
-      expect(zbx.server.version).to match(/(2\.4|3\.[024]|4\.0|5\.[02])\.\d+/)
+    it 'should be 5.0.x, 5.2.x, 5.4.x, 6.0.x, 6.2.x, or 6.4.x' do
+      expect(zbx.server.version).to match(/[56]\.[024]\.\d+/)
     end
   end
 end
