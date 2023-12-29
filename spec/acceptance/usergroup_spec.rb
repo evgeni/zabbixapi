@@ -14,26 +14,32 @@ describe 'usergroup' do
       @usergroupid = zbx.usergroups.create(name: @usergroup)
       @user = gen_name 'user'
       @roleid = "1"
-      @userid = zbx.users.create(
+      params = {
         alias: @user,
         name: @user,
         surname: @user,
         passwd: @user,
         usrgrps: [{usrgrpid: @usergroupid}],
-        roleid: @roleid
-      )
+      }
+      if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+        params[:roleid] = @roleid
+      end
+      @userid = zbx.users.create(**params)
 
       @usergroup2 = gen_name 'usergroup'
       @usergroupid2 = zbx.usergroups.create(name: @usergroup2)
       @user2 = gen_name 'user'
-      @userid2 = zbx.users.create(
+      params2 = {
         alias: @user2,
         name: @user2,
         surname: @user2,
         passwd: @user2,
         usrgrps: [{usrgrpid: @usergroupid2}],
-        roleid: @roleid
-      )
+      }
+      if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+        params2[:roleid] = @roleid
+      end
+      @userid2 = zbx.users.create(**params2)
     end
 
     describe 'get_or_create' do

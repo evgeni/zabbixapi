@@ -33,14 +33,17 @@ describe 'user' do
     describe 'create' do
       it 'should return integer id' do
         user = gen_name 'user'
-        userid = zbx.users.create(
+        params = {
           alias: user,
           name: user,
           surname: user,
           passwd: user,
-          roleid: @roleid,
           usrgrps: [@usergroupid]
-        )
+        }
+        if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+          params[:roleid] = @roleid
+        end
+        userid = zbx.users.create(**params)
         expect(userid).to be_kind_of(Integer)
       end
     end
@@ -55,26 +58,32 @@ describe 'user' do
   context 'when exists' do
     before :all do
       @user = gen_name 'user'
-      @userid = zbx.users.create(
+      params = {
         alias: @user,
         name: @user,
         surname: @user,
         passwd: @user,
         usrgrps: [@usergroupid],
-        roleid: @roleid
-      )
+      }
+      if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+        params[:roleid] = @roleid
+      end
+      @userid = zbx.users.create(**params)
     end
 
     describe 'create_or_update' do
       it 'should return id' do
-        expect(
-          zbx.users.create_or_update(
+        params = {
             alias: @user,
             name: @user,
             surname: @user,
             passwd: @user,
-            roleid: @roleid
-          )
+        }
+        if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+          params[:roleid] = @roleid
+        end
+        expect(
+          zbx.users.create_or_update(**params)
         ).to eq @userid
       end
     end
