@@ -35,7 +35,7 @@ describe 'user' do
         user = gen_name 'user'
         passwd = gen_name 'passwd'
         params = {
-          alias: user,
+          "#{zbx.users.identify}": user,
           name: user,
           surname: user,
           passwd: passwd,
@@ -51,7 +51,7 @@ describe 'user' do
 
     describe 'get_id' do
       it 'should return nil' do
-        expect(zbx.users.get_id(alias: 'name_____')).to be_nil
+        expect(zbx.users.get_id("#{zbx.users.identify}": 'name_____')).to be_nil
       end
     end
   end
@@ -61,7 +61,7 @@ describe 'user' do
       @user = gen_name 'user'
       @passwd = gen_name 'passwd'
       params = {
-        alias: @user,
+        "#{zbx.users.identify}": @user,
         name: @user,
         surname: @user,
         passwd: @passwd,
@@ -76,7 +76,7 @@ describe 'user' do
     describe 'create_or_update' do
       it 'should return id' do
         params = {
-            alias: @user,
+            "#{zbx.users.identify}": @user,
             name: @user,
             surname: @user,
             passwd: @passwd,
@@ -93,7 +93,7 @@ describe 'user' do
 
     describe 'get_full_data' do
       it 'should return string name' do
-        expect(zbx.users.get_full_data(alias: @user)[0]['name']).to be_kind_of(String)
+        expect(zbx.users.get_full_data("#{zbx.users.identify}": @user)[0]['name']).to be_kind_of(String)
       end
     end
 
