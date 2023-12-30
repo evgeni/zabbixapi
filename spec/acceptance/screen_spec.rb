@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'screen' do
+describe 'screen', unless: Gem::Version.new(zbx.client.api_version) >= SCREEN_REMOVED_VERSION do
   before :all do
     @hostgroup = gen_name 'hostgroup'
     @hostgroupid = zbx.hostgroups.create(name: @hostgroup)
