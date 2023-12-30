@@ -80,6 +80,7 @@ describe 'user' do
             name: @user,
             surname: @user,
             passwd: @passwd,
+            usrgrps: [@usergroupid],
         }
         if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
           params[:roleid] = @roleid
