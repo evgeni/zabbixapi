@@ -33,11 +33,12 @@ describe 'user' do
     describe 'create' do
       it 'should return integer id' do
         user = gen_name 'user'
+        passwd = gen_name 'passwd'
         params = {
           alias: user,
           name: user,
           surname: user,
-          passwd: user,
+          passwd: passwd,
           usrgrps: [@usergroupid]
         }
         if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
@@ -58,11 +59,12 @@ describe 'user' do
   context 'when exists' do
     before :all do
       @user = gen_name 'user'
+      @passwd = gen_name 'passwd'
       params = {
         alias: @user,
         name: @user,
         surname: @user,
-        passwd: @user,
+        passwd: @passwd,
         usrgrps: [@usergroupid],
       }
       if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
@@ -77,7 +79,7 @@ describe 'user' do
             alias: @user,
             name: @user,
             surname: @user,
-            passwd: @user,
+            passwd: @passwd,
         }
         if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
           params[:roleid] = @roleid

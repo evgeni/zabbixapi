@@ -13,12 +13,13 @@ describe 'usergroup' do
       @usergroup = gen_name 'usergroup'
       @usergroupid = zbx.usergroups.create(name: @usergroup)
       @user = gen_name 'user'
+      @passwd = gen_name 'passwd'
       @roleid = "1"
       params = {
         alias: @user,
         name: @user,
         surname: @user,
-        passwd: @user,
+        passwd: @passwd,
         usrgrps: [{usrgrpid: @usergroupid}],
       }
       if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
@@ -29,11 +30,12 @@ describe 'usergroup' do
       @usergroup2 = gen_name 'usergroup'
       @usergroupid2 = zbx.usergroups.create(name: @usergroup2)
       @user2 = gen_name 'user'
+      @passwd2 = gen_name 'passwd'
       params2 = {
         alias: @user2,
         name: @user2,
         surname: @user2,
-        passwd: @user2,
+        passwd: @passwd2,
         usrgrps: [{usrgrpid: @usergroupid2}],
       }
       if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
