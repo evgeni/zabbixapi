@@ -25,13 +25,19 @@ class ZabbixApi
     #
     # @return [Hash]
     def auth
-      api_request(
+      user_param = if Gem::Version.new(api_version) >= Gem::Version.new('6.4')
+                     :username
+                   else
+                     :user
+                   end
+      params = {
         method: 'user.login',
         params: {
-          user: @options[:user],
           password: @options[:password]
         }
-      )
+      }
+      params[:params][user_param] = @options[:user]
+      api_request(**params)
     end
 
     # ZabbixApi::Basic.log does not like @client.options[:debug]
