@@ -25,7 +25,11 @@ class ZabbixApi
     #
     # @return [String]
     def identify
-      'alias'
+      if Gem::Version.new(@client.api_version) >= Gem::Version.new('5.4')
+        'username'
+      else
+        'alias'
+      end
     end
 
     def medias_helper(data, action)

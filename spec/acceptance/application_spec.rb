@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'application' do
+describe 'application', unless: Gem::Version.new(zbx.client.api_version) >= APPLICATION_REMOVED_VERSION do
   before :all do
     @hostgroup = gen_name 'hostgroup'
     @hostgroupid = zbx.hostgroups.create(name: @hostgroup)

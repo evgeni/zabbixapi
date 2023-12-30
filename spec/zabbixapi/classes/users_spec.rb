@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'ZabbixApi::Users' do
+  before do
+    allow(client).to receive(:api_version).and_return('5.2.2')
+  end
+
   let(:users_mock) { ZabbixApi::Users.new(client) }
   let(:client) { double }
 
@@ -14,6 +18,16 @@ describe 'ZabbixApi::Users' do
     subject { users_mock.identify }
 
     it { is_expected.to eq 'alias' }
+  end
+
+  describe '.identify on 6.4+' do
+    before do
+      allow(client).to receive(:api_version).and_return('6.4.0')
+    end
+
+    subject { users_mock.identify }
+
+    it { is_expected.to eq 'username' }
   end
 
   describe '.key' do

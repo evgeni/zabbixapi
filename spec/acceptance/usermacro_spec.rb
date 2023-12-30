@@ -91,7 +91,6 @@ describe 'usermacro' do
           zbx.usermacros.create_or_update(
             macro: @hostmacro,
             value: 'public',
-            hostid: @templateid
           )
         ).to eq @hostmacroid
       end

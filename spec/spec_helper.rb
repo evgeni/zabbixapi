@@ -1,5 +1,10 @@
 require 'zabbixapi'
 
+MIN_ROLE_VERSION = Gem::Version.new('5.2')
+APPLICATION_REMOVED_VERSION = Gem::Version.new('5.4')
+SCREEN_REMOVED_VERSION = Gem::Version.new('5.4')
+VALUEMAP_HOSTID_REQUIRED_VERSION = Gem::Version.new('5.4')
+
 def zbx
   # settings
   @api_url = ENV['ZABBIX_HOST_URL'] || 'http://localhost:8080/api_jsonrpc.php'

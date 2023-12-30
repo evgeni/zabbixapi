@@ -77,6 +77,18 @@ describe 'ZabbixApi::Client' do
       )
       subject
     end
+
+    it 'gets auth using api request on 6.4+' do
+      allow_any_instance_of(ZabbixApi::Client).to receive(:api_version).and_return('6.4.0')
+      expect_any_instance_of(ZabbixApi::Client).to receive(:api_request).with(
+        method: 'user.login',
+        params: {
+          username: nil,
+          password: nil
+        }
+      )
+      subject
+    end
   end
 
   describe '.logout' do

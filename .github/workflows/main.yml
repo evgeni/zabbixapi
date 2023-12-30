@@ -28,6 +28,13 @@ jobs:
         - head
         - jruby-9.2.10
         - jruby-head
+        zabbix:
+        - '5.0'
+        - '5.2'
+        - '5.4'
+        - '6.0'
+        - '6.2'
+        - '6.4'
     services:
       postgres:
         image: postgres:13-alpine
@@ -42,14 +49,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
       zabbix-server:
-        image: zabbix/zabbix-server-pgsql:alpine-5.2-latest
+        image: zabbix/zabbix-server-pgsql:alpine-${{ matrix.zabbix }}-latest
         # ports: ['10051:10051']
         env:
           DB_SERVER_HOST: postgres
           POSTGRES_USER: zabbix
           POSTGRES_PASSWORD: password
       zabbix-frontend:
-        image: zabbix/zabbix-web-apache-pgsql:alpine-5.2-latest
+        image: zabbix/zabbix-web-apache-pgsql:alpine-${{ matrix.zabbix }}-latest
         ports: ['8080:8080']
         env:
           DB_SERVER_HOST: postgres

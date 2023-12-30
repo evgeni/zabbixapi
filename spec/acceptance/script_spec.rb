@@ -14,7 +14,8 @@ describe 'script' do
       it 'should return integer id' do
         scriptid = zbx.scripts.create(
           name: @script,
-          command: 'hostname'
+          command: 'hostname',
+          type: 0
         )
         expect(scriptid).to be_kind_of(Integer)
       end
@@ -32,7 +33,8 @@ describe 'script' do
       @script = gen_name 'script'
       @scriptid = zbx.scripts.create(
         name: @script,
-        command: 'hostname'
+        command: 'hostname',
+        type: 0
       )
     end
 
@@ -40,7 +42,8 @@ describe 'script' do
       it 'should return id of script' do
         expect(zbx.scripts.get_or_create(
                  name: @script,
-                 command: 'hostname'
+                 command: 'hostname',
+                 type: 0
                )).to eq @scriptid
       end
     end
@@ -66,7 +69,8 @@ describe 'script' do
         expect(zbx.scripts.update(
                  scriptid: zbx.scripts.get_id(name: @script),
                  # enable_confirmation: 1,
-                 confirmation: 'Are you sure you would like to show the system hostname?'
+                 confirmation: 'Are you sure you would like to show the system hostname?',
+                 type: 0
                )).to eq @scriptid
       end
     end
@@ -75,14 +79,16 @@ describe 'script' do
       it 'should update existing script' do
         expect(zbx.scripts.get_or_create(
                  name: @script,
-                 command: 'hostname'
+                 command: 'hostname',
+                 type: 0
                )).to eq @scriptid
       end
 
       it 'should create script' do
         new_script_id = zbx.scripts.get_or_create(
           name: @script + '____1',
-          command: 'hostname'
+          command: 'hostname',
+          type: 0
         )
 
         expect(new_script_id).to be_kind_of(Integer)

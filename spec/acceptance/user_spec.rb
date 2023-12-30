@@ -33,21 +33,25 @@ describe 'user' do
     describe 'create' do
       it 'should return integer id' do
         user = gen_name 'user'
-        userid = zbx.users.create(
-          alias: user,
+        passwd = gen_name 'passwd'
+        params = {
+          "#{zbx.users.identify}": user,
           name: user,
           surname: user,
-          passwd: user,
-          roleid: @roleid,
+          passwd: passwd,
           usrgrps: [@usergroupid]
-        )
+        }
+        if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+          params[:roleid] = @roleid
+        end
+        userid = zbx.users.create(**params)
         expect(userid).to be_kind_of(Integer)
       end
     end
 
     describe 'get_id' do
       it 'should return nil' do
-        expect(zbx.users.get_id(alias: 'name_____')).to be_nil
+        expect(zbx.users.get_id("#{zbx.users.identify}": 'name_____')).to be_nil
       end
     end
   end
@@ -55,33 +59,41 @@ describe 'user' do
   context 'when exists' do
     before :all do
       @user = gen_name 'user'
-      @userid = zbx.users.create(
-        alias: @user,
+      @passwd = gen_name 'passwd'
+      params = {
+        "#{zbx.users.identify}": @user,
         name: @user,
         surname: @user,
-        passwd: @user,
+        passwd: @passwd,
         usrgrps: [@usergroupid],
-        roleid: @roleid
-      )
+      }
+      if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+        params[:roleid] = @roleid
+      end
+      @userid = zbx.users.create(**params)
     end
 
     describe 'create_or_update' do
       it 'should return id' do
-        expect(
-          zbx.users.create_or_update(
-            alias: @user,
+        params = {
+            "#{zbx.users.identify}": @user,
             name: @user,
             surname: @user,
-            passwd: @user,
-            roleid: @roleid
-          )
+            passwd: @passwd,
+            usrgrps: [@usergroupid],
+        }
+        if Gem::Version.new(zbx.client.api_version) >= MIN_ROLE_VERSION
+          params[:roleid] = @roleid
+        end
+        expect(
+          zbx.users.create_or_update(**params)
         ).to eq @userid
       end
     end
 
     describe 'get_full_data' do
       it 'should return string name' do
-        expect(zbx.users.get_full_data(alias: @user)[0]['name']).to be_kind_of(String)
+        expect(zbx.users.get_full_data("#{zbx.users.identify}": @user)[0]['name']).to be_kind_of(String)
       end
     end
 

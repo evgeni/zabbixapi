@@ -25,13 +25,19 @@ class ZabbixApi
     #
     # @return [Hash]
     def auth
-      api_request(
+      user_param = if Gem::Version.new(api_version) >= Gem::Version.new('6.4')
+                     :username
+                   else
+                     :user
+                   end
+      params = {
         method: 'user.login',
         params: {
-          user: @options[:user],
           password: @options[:password]
         }
-      )
+      }
+      params[:params][user_param] = @options[:user]
+      api_request(**params)
     end
 
     # ZabbixApi::Basic.log does not like @client.options[:debug]
@@ -71,7 +77,7 @@ class ZabbixApi
         @proxy_port = @proxy_uri.port
         @proxy_user, @proxy_pass = @proxy_uri.userinfo.split(/:/) if @proxy_uri.userinfo
       end
-      unless api_version =~ %r{^5.[0|2]\.\d+$}
+      unless api_version =~ %r{^[56].[024]\.\d+$}
         message = "Zabbix API version: #{api_version} is not supported by this version of zabbixapi"
         if @options[:ignore_version]
           puts "[WARNING] #{message}" if @options[:debug]
